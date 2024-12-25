@@ -1,4 +1,4 @@
-name: Update SIMDe Headers in clib.json
+name: Check SIMDe headers and update clib.json
 
 on:
   schedule:
@@ -21,12 +21,12 @@ jobs:
       - name: Generate list of .h files
         id: generate_files
         run: |
-          FILE_LIST=$(find simde-repo -type f -name "*.h" | sed 's|simde-repo/||' | sort)
+          FILE_LIST=$(find simde-repo -type f -name "*.h" | sed 's|simde-repo/||' | sort | tr '\n' ',' | sed 's/,$//')
           echo "::set-output name=file_list::$FILE_LIST"
 
       - name: Update clib.json
         run: |
-          FILES=$(echo "${{ steps.generate_files.outputs.file_list }}" | tr '\n' ',' | sed 's/,$//' | sed 's/,/","/g')
+          FILES=$(echo "${{ steps.generate_files.outputs.file_list }}" | sed 's/,/","/g')
           jq ".src = [\"$FILES\"]" clib.json > clib.json.tmp
           mv clib.json.tmp clib.json
 
