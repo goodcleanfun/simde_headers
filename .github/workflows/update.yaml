@@ -8,7 +8,8 @@ on:
 jobs:
   update-clib-json:
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: write
     steps:
       - name: Checkout the clib repository
         uses: actions/checkout@v4
@@ -20,7 +21,7 @@ jobs:
       - name: Generate list of .h files
         id: generate_files
         run: |
-          FILE_LIST=$(find simde-repo -type f -name "*.h" | sed 's|simde-repo/||')
+          FILE_LIST=$(find simde-repo -type f -name "*.h" | sed 's|simde-repo/||' | sort)
           echo "::set-output name=file_list::$FILE_LIST"
 
       - name: Update clib.json
@@ -36,7 +37,7 @@ jobs:
           if [ "$(git diff --name-only HEAD)" ]; then
             git add clib.json
             timestamp=$(date -u)
-            git commit -m "Update clib.json with latest SIMDe headers [$(timestamp)]" || exit 0
+            git commit -m "Update clib.json with latest SIMDe headers [${timestamp}]" || exit 0
             git push
           else
             echo "No changes to commit."
