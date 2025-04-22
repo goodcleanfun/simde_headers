@@ -25,6 +25,8 @@ def get_simde_headers(dir, start):
         if rel_path in seen:
             continue
         seen.add(rel_path)
+        if rel_path == "x86/ssse3.h":
+            breakpoint()
         needed.append(rel_path)
 
         for line in open(os.path.join(dir, current_dir, header)):
