@@ -4,7 +4,7 @@ import os
 from collections.abc import Sequence
 
 
-local_include_pattern = re.compile(r"#include \"(.*)\"")
+local_include_pattern = re.compile(r"#[ ]*include \"(.*)\"")
 
 def package_header_replace(package_name, base_dir, filename):
     current_dir = os.path.dirname(filename)
